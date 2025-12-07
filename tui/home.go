@@ -11,7 +11,13 @@ type (
 	HomeScreenModel struct{
 		Size Size
 	}
+
+	SwitchHomeScreenMsg struct{}
 )
+
+func SwitchHomeScreen() tea.Msg {
+	return SwitchHomeScreenMsg{}
+}
 
 func NewHomeScreen() HomeScreenModel {
 	return HomeScreenModel{}
@@ -29,12 +35,19 @@ func (m HomeScreenModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		switch msg.String() {
 		case "q", "ctrl-c":
 			cmd = tea.Quit
+		case "N":
+			cmd = SwitchNotificationScreen
 		}
 	case Size:
 		m.Size = msg
 	}
 
 	return m, cmd
+}
+
+func (m HomeScreenModel) SetSize(width, height int) HomeScreenModel {
+	m.Size = NewSize(width, height)
+	return m
 }
 
 func (m HomeScreenModel) View() string {
