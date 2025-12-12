@@ -80,6 +80,10 @@ func (m HeaderModel) Update(msg tea.Msg) (HeaderModel, tea.Cmd) {
 		m.SetActive(0)
 	case SwitchNotificationScreenMsg:
 		m.SetActive(1)
+	case SwitchListsScreenMsg:
+		m.SetActive(2)
+	case SwitchPrivateScreenMsg:
+		m.SetActive(3)
 	}
 
 	return m, cmd

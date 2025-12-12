@@ -1,10 +1,8 @@
 package tui
 
 import (
-	"fmt"
-	"strings"
-
 	tea "github.com/charmbracelet/bubbletea"
+	"github.com/charmbracelet/lipgloss"
 )
 
 type (
@@ -20,6 +18,8 @@ func NewApp() AppModel {
 	screens := []tea.Model{
 		NewHomeScreen(),
 		NewNotificationScreen(),
+		NewListsScreen(),
+		NewPrivateScreen(),
 	}
 	return AppModel{
 		Header: NewHeader(),
@@ -36,12 +36,29 @@ func (m AppModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	var cmd, headerCmd, screenCmd tea.Cmd
 
 	switch msg := msg.(type) {
+	case tea.KeyMsg:
+		switch msg.String() {
+		case "q", "ctrl-c":
+			cmd = tea.Quit
+		case "H":
+			cmd = SwitchHomeScreen
+		case "N":
+			cmd = SwitchNotificationScreen
+		case "L":
+			cmd = SwitchListsScreen
+		case "P":
+			cmd = SwitchPrivateScreen
+		}
 	case tea.WindowSizeMsg:
 		m.SetSize(msg.Width, msg.Height)
 	case SwitchHomeScreenMsg:
 		m.Screen = m.Screens[0]
 	case SwitchNotificationScreenMsg:
 		m.Screen = m.Screens[1]
+	case SwitchListsScreenMsg:
+		m.Screen = m.Screens[2]
+	case SwitchPrivateScreenMsg:
+		m.Screen = m.Screens[3]
 	}
 
 	m.Header, headerCmd = m.Header.Update(msg)
@@ -65,9 +82,9 @@ func (m *AppModel) SetSize(width, height int) {
 }
 
 func (m AppModel) View() string {
-	return strings.Join([]string{
-		fmt.Sprintf("%d x %d", m.Size.Width, m.Size.Height),
+	return lipgloss.JoinVertical(
+		lipgloss.Left,
 		m.Header.View(),
 		m.Screen.View(),
-	}, "\n")
+	)
 }

@@ -25,14 +25,7 @@ func (m NotificationScreenModel) Init() tea.Cmd {
 func (m NotificationScreenModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	var cmd tea.Cmd
 
-	switch msg := msg.(type) {
-	case tea.KeyMsg:
-		switch msg.String() {
-		case "q", "ctrl-c":
-			cmd = tea.Quit
-		case "H":
-			cmd = SwitchHomeScreen
-		}
+	switch msg.(type) {
 	}
 
 	return m, cmd

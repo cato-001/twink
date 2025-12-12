@@ -1,8 +1,6 @@
 package tui
 
 import (
-	"fmt"
-
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/charmbracelet/lipgloss"
 )
@@ -13,6 +11,11 @@ type (
 	}
 
 	SwitchHomeScreenMsg struct{}
+)
+
+var (
+	homeScreenStyle = lipgloss.NewStyle().
+		Padding(0, 4)
 )
 
 func SwitchHomeScreen() tea.Msg {
@@ -30,16 +33,7 @@ func (m HomeScreenModel) Init() tea.Cmd {
 func (m HomeScreenModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	var cmd tea.Cmd
 
-	switch msg := msg.(type) {
-	case tea.KeyMsg:
-		switch msg.String() {
-		case "q", "ctrl-c":
-			cmd = tea.Quit
-		case "N":
-			cmd = SwitchNotificationScreen
-		}
-	case Size:
-		m.Size = msg
+	switch msg.(type) {
 	}
 
 	return m, cmd
@@ -51,16 +45,11 @@ func (m HomeScreenModel) SetSize(width, height int) HomeScreenModel {
 }
 
 func (m HomeScreenModel) View() string {
-	header := lipgloss.NewStyle().
-		Align(lipgloss.Center).
-		Width(m.Size.Width).
-		SetString(fmt.Sprintf("Home\n%s", "@example@mastodon.social"))
-
-	window := lipgloss.NewStyle().
+	screen := homeScreenStyle.
 		Width(m.Size.Width).
 		Height(m.Size.Height)
 
-	return window.Render(
-		header.Render(),
+	return screen.Render(
+		"HomeScreen",
 	)
 }
